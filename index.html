@@ -1,0 +1,1380 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600&family=Poppins:wght@300;400;600&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+.cyber-root{
+  background:#050505;
+  min-height:100vh;
+  font-family:'Poppins',sans-serif;
+  position:relative;
+  overflow:hidden;
+  padding:2rem 1rem;
+}
+
+canvas#bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+.glow-orb{
+  position:fixed;border-radius:50%;filter:blur(80px);z-index:0;pointer-events:none;
+}
+.orb1{width:400px;height:400px;background:rgba(255,0,76,0.12);top:-100px;left:-100px;animation:orbFloat1 8s ease-in-out infinite}
+.orb2{width:300px;height:300px;background:rgba(255,26,94,0.08);bottom:-50px;right:-50px;animation:orbFloat2 10s ease-in-out infinite}
+.orb3{width:200px;height:200px;background:rgba(255,77,121,0.06);top:50%;left:50%;animation:orbFloat3 12s ease-in-out infinite}
+
+@keyframes orbFloat1{0%,100%{transform:translate(0,0)}50%{transform:translate(40px,30px)}}
+@keyframes orbFloat2{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,-40px)}}
+@keyframes orbFloat3{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.3)}}
+
+.container{
+  position:relative;z-index:10;max-width:680px;margin:0 auto;
+}
+
+.header{text-align:center;margin-bottom:2rem}
+
+.shield-icon{
+  width:64px;height:64px;margin:0 auto 1rem;
+  background:rgba(255,0,76,0.1);
+  border:1.5px solid rgba(255,0,76,0.5);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  animation:shieldPulse 2s ease-in-out infinite;
+  font-size:28px;
+}
+@keyframes shieldPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,0,76,0.3),inset 0 0 20px rgba(255,0,76,0.1)}50%{box-shadow:0 0 0 15px rgba(255,0,76,0),inset 0 0 30px rgba(255,0,76,0.2)}}
+
+.title{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(1.1rem,4vw,1.6rem);
+  font-weight:900;
+  color:#ff004c;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  text-shadow:0 0 20px rgba(255,0,76,0.5);
+  animation:titleGlow 3s ease-in-out infinite;
+}
+@keyframes titleGlow{0%,100%{text-shadow:0 0 20px rgba(255,0,76,0.5)}50%{text-shadow:0 0 40px rgba(255,0,76,0.8),0 0 60px rgba(255,0,76,0.3)}}
+
+.subtitle{
+  font-family:'Rajdhani',sans-serif;
+  color:rgba(255,77,121,0.7);
+  font-size:0.85rem;
+  letter-spacing:5px;
+  text-transform:uppercase;
+  margin-top:0.4rem;
+}
+
+.main-card{
+  background:rgba(10,10,10,0.85);
+  border:1px solid rgba(255,0,76,0.25);
+  border-radius:16px;
+  padding:2rem;
+  backdrop-filter:blur(20px);
+  position:relative;
+  overflow:hidden;
+}
+
+.main-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,0,76,0.8),transparent);
+  animation:scanLine 3s linear infinite;
+}
+@keyframes scanLine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+.main-card::after{
+  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background:radial-gradient(ellipse at top center,rgba(255,0,76,0.05) 0%,transparent 60%);
+  pointer-events:none;
+}
+
+.section-label{
+  font-family:'Rajdhani',sans-serif;
+  font-size:0.7rem;
+  letter-spacing:4px;
+  color:rgba(255,0,76,0.6);
+  text-transform:uppercase;
+  margin-bottom:0.6rem;
+}
+
+.input-wrap{
+  position:relative;margin-bottom:1.5rem;
+}
+
+.pw-input{
+  width:100%;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,0,76,0.3);
+  border-radius:8px;
+  padding:0.85rem 3rem 0.85rem 1rem;
+  color:#fff;
+  font-family:'Rajdhani',sans-serif;
+  font-size:1.1rem;
+  letter-spacing:2px;
+  outline:none;
+  transition:border-color 0.3s,box-shadow 0.3s;
+}
+.pw-input:focus{
+  border-color:rgba(255,0,76,0.7);
+  box-shadow:0 0 0 3px rgba(255,0,76,0.1),inset 0 0 20px rgba(255,0,76,0.05);
+}
+.pw-input::placeholder{color:rgba(255,255,255,0.2);letter-spacing:1px}
+
+.eye-btn{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;
+  color:rgba(255,0,76,0.6);font-size:18px;
+  transition:color 0.2s;padding:4px;
+}
+.eye-btn:hover{color:#ff004c}
+
+.analyze-btn{
+  width:100%;
+  background:rgba(255,0,76,0.1);
+  border:1px solid rgba(255,0,76,0.6);
+  border-radius:8px;
+  color:#ff4d79;
+  font-family:'Orbitron',monospace;
+  font-size:0.85rem;
+  font-weight:700;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  padding:0.85rem;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  transition:all 0.3s;
+  margin-bottom:1.5rem;
+}
+.analyze-btn:hover{
+  background:rgba(255,0,76,0.2);
+  box-shadow:0 0 20px rgba(255,0,76,0.3);
+  transform:translateY(-1px);
+}
+.analyze-btn:active{transform:translateY(0) scale(0.99)}
+.analyze-btn::before{
+  content:'';position:absolute;top:-100%;left:-100%;width:300%;height:300%;
+  background:linear-gradient(135deg,transparent 40%,rgba(255,0,76,0.1) 50%,transparent 60%);
+  transition:top 0.4s,left 0.4s;
+}
+.analyze-btn:hover::before{top:0;left:0}
+
+.strength-section{margin-bottom:1.5rem}
+
+.strength-header{
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;
+}
+
+.strength-label{
+  font-family:'Rajdhani',sans-serif;
+  font-size:0.75rem;
+  letter-spacing:3px;
+  color:rgba(255,255,255,0.4);
+  text-transform:uppercase;
+}
+
+.strength-badge{
+  font-family:'Orbitron',monospace;
+  font-size:0.7rem;
+  font-weight:700;
+  letter-spacing:2px;
+  padding:3px 12px;
+  border-radius:20px;
+  text-transform:uppercase;
+  transition:all 0.5s;
+}
+
+.bar-track{
+  width:100%;height:6px;
+  background:rgba(255,255,255,0.05);
+  border-radius:3px;overflow:hidden;
+  margin-bottom:0.5rem;
+}
+.bar-fill{
+  height:100%;width:0%;border-radius:3px;
+  transition:width 0.8s cubic-bezier(0.4,0,0.2,1),background 0.5s;
+  position:relative;
+}
+.bar-fill::after{
+  content:'';position:absolute;top:0;right:0;bottom:0;width:30px;
+  background:rgba(255,255,255,0.3);filter:blur(4px);
+  animation:barShine 2s ease-in-out infinite;
+}
+@keyframes barShine{0%,100%{opacity:0}50%{opacity:1}}
+
+.bar-segments{display:flex;gap:3px;margin-bottom:1rem}
+.seg{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,0.07);transition:background 0.4s}
+
+.entropy-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-bottom:1.5rem;
+}
+
+.metric-box{
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:8px;padding:0.75rem;text-align:center;
+  transition:border-color 0.3s;
+}
+.metric-box:hover{border-color:rgba(255,0,76,0.3)}
+
+.metric-val{
+  font-family:'Orbitron',monospace;
+  font-size:1.3rem;font-weight:700;
+  color:#ff004c;
+  text-shadow:0 0 10px rgba(255,0,76,0.4);
+  display:block;
+}
+
+.metric-lbl{
+  font-family:'Rajdhani',sans-serif;
+  font-size:0.65rem;letter-spacing:2px;
+  color:rgba(255,255,255,0.3);
+  text-transform:uppercase;margin-top:2px;display:block;
+}
+
+.checks-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1.5rem;
+}
+
+.check-item{
+  display:flex;align-items:center;gap:8px;
+  padding:0.5rem 0.75rem;
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:6px;
+  transition:all 0.3s;
+}
+.check-item.pass{
+  border-color:rgba(0,255,100,0.2);
+  background:rgba(0,255,100,0.03);
+}
+.check-item.fail{
+  border-color:rgba(255,0,76,0.15);
+}
+
+.check-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:rgba(255,255,255,0.1);
+  transition:all 0.3s;flex-shrink:0;
+}
+.check-item.pass .check-dot{
+  background:#00ff64;
+  box-shadow:0 0 6px rgba(0,255,100,0.6);
+}
+.check-item.fail .check-dot{
+  background:rgba(255,0,76,0.4);
+}
+
+.check-text{
+  font-family:'Rajdhani',sans-serif;
+  font-size:0.8rem;color:rgba(255,255,255,0.4);
+  letter-spacing:1px;
+  transition:color 0.3s;
+}
+.check-item.pass .check-text{color:rgba(0,255,100,0.8)}
+
+.suggestions-box{
+  background:rgba(255,0,76,0.03);
+  border:1px solid rgba(255,0,76,0.15);
+  border-radius:8px;padding:1rem;
+  margin-bottom:1.5rem;
+  display:none;
+}
+.suggestions-box.show{display:block}
+
+.sug-title{
+  font-family:'Orbitron',monospace;
+  font-size:0.65rem;letter-spacing:3px;
+  color:rgba(255,0,76,0.7);
+  text-transform:uppercase;margin-bottom:0.75rem;
+}
+
+.sug-item{
+  display:flex;align-items:flex-start;gap:8px;
+  font-family:'Rajdhani',sans-serif;
+  font-size:0.85rem;color:rgba(255,255,255,0.5);
+  margin-bottom:0.4rem;line-height:1.4;
+}
+.sug-arrow{color:#ff004c;flex-shrink:0}
+
+.gen-section{margin-bottom:1rem}
+
+.gen-pw-box{
+  display:flex;gap:8px;align-items:center;
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px;padding:0.75rem 1rem;
+  cursor:pointer;transition:all 0.3s;
+}
+.gen-pw-box:hover{border-color:rgba(255,0,76,0.3)}
+
+.gen-pw-text{
+  font-family:'Rajdhani',sans-serif;
+  font-size:0.95rem;letter-spacing:2px;
+  color:rgba(255,255,255,0.5);flex:1;
+  word-break:break-all;
+}
+
+.gen-btn{
+  font-family:'Rajdhani',sans-serif;
+  font-size:0.7rem;letter-spacing:2px;
+  color:#ff004c;text-transform:uppercase;
+  background:none;border:none;cursor:pointer;
+  white-space:nowrap;
+}
+
+.terminal-line{
+  font-family:'Rajdhani',monospace;
+  font-size:0.75rem;letter-spacing:1px;
+  color:rgba(255,0,76,0.4);
+  text-align:right;margin-top:1rem;
+  animation:termBlink 1.5s step-end infinite;
+}
+.terminal-line span{color:rgba(255,0,76,0.7)}
+@keyframes termBlink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+.score-ring{
+  width:80px;height:80px;margin:0 auto 1rem;
+  position:relative;
+}
+.score-ring svg{transform:rotate(-90deg)}
+.score-num{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:700;
+  color:#ff004c;text-shadow:0 0 10px rgba(255,0,76,0.5);
+}
+</style>
+
+<canvas id="bg"></canvas>
+<div class="glow-orb orb1"></div>
+<div class="glow-orb orb2"></div>
+<div class="glow-orb orb3"></div>
+
+<div class="cyber-root">
+<div class="container">
+
+  <div class="header">
+    <div class="shield-icon" aria-hidden="true">🛡</div>
+    <div class="title">CyberGuard Pro</div>
+    <div class="subtitle">Password Threat Analyzer</div>
+  </div>
+
+  <div class="main-card">
+    <div class="section-label">// ENTER CREDENTIALS FOR ANALYSIS</div>
+
+    <div class="input-wrap">
+      <input class="pw-input" type="password" id="pwInput" placeholder="Type your password..." autocomplete="off" />
+      <button class="eye-btn" id="eyeBtn" aria-label="Toggle visibility">
+        <i class="ti ti-eye"></i>
+      </button>
+    </div>
+
+    <button class="analyze-btn" id="analyzeBtn">
+      <i class="ti ti-scan" aria-hidden="true"></i> &nbsp; INITIATE DEEP SCAN
+    </button>
+
+    <div class="strength-section">
+      <div class="strength-header">
+        <span class="strength-label">// THREAT LEVEL</span>
+        <span class="strength-badge" id="strengthBadge" style="background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.1)">STANDBY</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" id="barFill"></div></div>
+      <div class="bar-segments" id="segs">
+        <div class="seg" id="s0"></div>
+        <div class="seg" id="s1"></div>
+        <div class="seg" id="s2"></div>
+        <div class="seg" id="s3"></div>
+      </div>
+    </div>
+
+    <div class="entropy-row">
+      <div class="metric-box">
+        <span class="metric-val" id="mScore">0</span>
+        <span class="metric-lbl">Security Score</span>
+      </div>
+      <div class="metric-box">
+        <span class="metric-val" id="mEntropy">0</span>
+        <span class="metric-lbl">Entropy (bits)</span>
+      </div>
+      <div class="metric-box">
+        <span class="metric-val" id="mCrack">∞</span>
+        <span class="metric-lbl">Crack Time</span>
+      </div>
+    </div>
+
+    <div class="section-label">// SECURITY CHECKS</div>
+    <div class="checks-grid">
+      <div class="check-item" id="c0"><div class="check-dot"></div><span class="check-text">12+ Characters</span></div>
+      <div class="check-item" id="c1"><div class="check-dot"></div><span class="check-text">Uppercase</span></div>
+      <div class="check-item" id="c2"><div class="check-dot"></div><span class="check-text">Lowercase</span></div>
+      <div class="check-item" id="c3"><div class="check-dot"></div><span class="check-text">Numbers</span></div>
+      <div class="check-item" id="c4"><div class="check-dot"></div><span class="check-text">Symbols</span></div>
+      <div class="check-item" id="c5"><div class="check-dot"></div><span class="check-text">No Repeats</span></div>
+      <div class="check-item" id="c6"><div class="check-dot"></div><span class="check-text">Not Common</span></div>
+      <div class="check-item" id="c7"><div class="check-dot"></div><span class="check-text">No Sequences</span></div>
+    </div>
+
+    <div class="suggestions-box" id="sugBox">
+      <div class="sug-title">⚡ THREAT INTELLIGENCE REPORT</div>
+      <div id="sugList"></div>
+    </div>
+
+    <div class="section-label">// SUGGESTED SECURE PASSWORD</div>
+    <div class="gen-section">
+      <div class="gen-pw-box" id="genBox">
+        <span class="gen-pw-text" id="genPw">Click GENERATE to create a secure password</span>
+        <button class="gen-btn" id="genBtn">
+          <i class="ti ti-refresh" aria-hidden="true"></i> GENERATE
+        </button>
+      </div>
+    </div>
+
+    <div class="terminal-line">SYSTEM STATUS: <span id="termStatus">AWAITING INPUT</span> ▮</div>
+  </div>
+
+</div>
+</div>
+
+<script>
+const WEAK_PASSWORDS = ['password','123456','qwerty','abc123','password1','letmein','welcome','monkey','dragon','master','sunshine','princess','shadow','football','iloveyou','admin','login','test','pass','1234','111111','654321','pass123','user','guest'];
+
+const canvas = document.getElementById('bg');
+const ctx = canvas.getContext('2d');
+let particles = [];
+let gridLines = [];
+
+function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;initGrid()}
+
+function initGrid(){
+  gridLines = [];
+  for(let x=0;x<canvas.width;x+=60)gridLines.push({x,y:0,type:'v'});
+  for(let y=0;y<canvas.height;y+=60)gridLines.push({x:0,y,type:'h'});
+}
+
+function initParticles(){
+  particles=[];
+  for(let i=0;i<50;i++){
+    particles.push({
+      x:Math.random()*window.innerWidth,
+      y:Math.random()*window.innerHeight,
+      vx:(Math.random()-0.5)*0.4,
+      vy:(Math.random()-0.5)*0.4,
+      r:Math.random()*2+0.5,
+      a:Math.random()*0.5+0.1,
+      pulse:Math.random()*Math.PI*2
+    });
+  }
+}
+
+function drawBg(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.strokeStyle='rgba(255,0,76,0.04)';
+  ctx.lineWidth=0.5;
+  gridLines.forEach(l=>{
+    ctx.beginPath();
+    if(l.type==='v'){ctx.moveTo(l.x,0);ctx.lineTo(l.x,canvas.height);}
+    else{ctx.moveTo(0,l.y);ctx.lineTo(canvas.width,l.y);}
+    ctx.stroke();
+  });
+
+  particles.forEach(p=>{
+    p.pulse+=0.02;
+    const a=p.a*(0.5+0.5*Math.sin(p.pulse));
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,0,76,${a})`;
+    ctx.fill();
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0||p.x>canvas.width)p.vx*=-1;
+    if(p.y<0||p.y>canvas.height)p.vy*=-1;
+  });
+
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x;
+      const dy=particles[i].y-particles[j].y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<120){
+        ctx.strokeStyle=`rgba(255,0,76,${0.06*(1-dist/120)})`;
+        ctx.lineWidth=0.5;
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x,particles[i].y);
+        ctx.lineTo(particles[j].x,particles[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(drawBg);
+}
+
+resize();initParticles();drawBg();
+window.addEventListener('resize',resize);
+
+function calcEntropy(pw){
+  let pool=0;
+  if(/[a-z]/.test(pw))pool+=26;
+  if(/[A-Z]/.test(pw))pool+=26;
+  if(/[0-9]/.test(pw))pool+=10;
+  if(/[^a-zA-Z0-9]/.test(pw))pool+=32;
+  return pool>0?(pw.length*Math.log2(pool)).toFixed(1):0;
+}
+
+function crackTime(entropy){
+  const e=parseFloat(entropy);
+  if(e<=0)return '< 1ms';
+  const attempts=Math.pow(2,e);
+  const speed=1e11;
+  const secs=attempts/speed;
+  if(secs<0.001)return '< 1ms';
+  if(secs<60)return secs.toFixed(1)+'s';
+  if(secs<3600)return (secs/60).toFixed(1)+'min';
+  if(secs<86400)return (secs/3600).toFixed(1)+'hr';
+  if(secs<31536000)return (secs/86400).toFixed(0)+'days';
+  if(secs<3153600000)return (secs/31536000).toFixed(0)+'yrs';
+  return secs>3.15e16?'∞ (Universe+)':'Centuries';
+}
+
+function analyzePassword(pw){
+  const checks={
+    length: pw.length>=12,
+    upper: /[A-Z]/.test(pw),
+    lower: /[a-z]/.test(pw),
+    number: /[0-9]/.test(pw),
+    symbol: /[^a-zA-Z0-9]/.test(pw),
+    noRepeat: !/(.)\1{2,}/.test(pw),
+    notCommon: !WEAK_PASSWORDS.includes(pw.toLowerCase()),
+    noSeq: !/(?:abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|qrs|rst|stu|tuv|uvw|vwx|wxy|xyz|012|123|234|345|456|567|678|789|890)/i.test(pw)
+  };
+
+  let score=0;
+  if(pw.length>=8)score+=10;
+  if(pw.length>=12)score+=15;
+  if(pw.length>=16)score+=10;
+  if(checks.upper)score+=15;
+  if(checks.lower)score+=10;
+  if(checks.number)score+=15;
+  if(checks.symbol)score+=20;
+  if(checks.noRepeat)score+=5;
+  if(checks.notCommon)score+=15;
+  if(checks.noSeq)score+=5;
+  score=Math.min(100,score);
+
+  let level='WEAK';
+  if(score>=75)level='VERY STRONG';
+  else if(score>=55)level='STRONG';
+  else if(score>=30)level='MEDIUM';
+
+  const suggestions=[];
+  if(pw.length<12)suggestions.push('Extend to at least 12 characters for better entropy');
+  if(!checks.upper)suggestions.push('Add uppercase letters (A-Z) to expand character space');
+  if(!checks.lower)suggestions.push('Include lowercase letters (a-z) for complexity');
+  if(!checks.number)suggestions.push('Mix in numeric digits (0-9)');
+  if(!checks.symbol)suggestions.push('Use special characters (!@#$%^&*) for maximum strength');
+  if(!checks.noRepeat)suggestions.push('Avoid repeated character sequences (aaa, 111)');
+  if(!checks.notCommon)suggestions.push('⚠ CRITICAL: This is a known compromised password');
+  if(!checks.noSeq)suggestions.push('Remove sequential patterns (abc, 123, xyz)');
+
+  return {checks,score,level,suggestions,entropy:calcEntropy(pw),crack:crackTime(calcEntropy(pw))};
+}
+
+function generatePassword(){
+  const upper='ABCDEFGHJKLMNPQRSTUVWXYZ';
+  const lower='abcdefghjkmnpqrstuvwxyz';
+  const nums='23456789';
+  const syms='!@#$%^&*_+-=';
+  let pw='';
+  pw+=upper[Math.floor(Math.random()*upper.length)];
+  pw+=upper[Math.floor(Math.random()*upper.length)];
+  pw+=lower[Math.floor(Math.random()*lower.length)];
+  pw+=lower[Math.floor(Math.random()*lower.length)];
+  pw+=nums[Math.floor(Math.random()*nums.length)];
+  pw+=nums[Math.floor(Math.random()*nums.length)];
+  pw+=syms[Math.floor(Math.random()*syms.length)];
+  pw+=syms[Math.floor(Math.random()*syms.length)];
+  const all=upper+lower+nums+syms;
+  for(let i=0;i<8;i++)pw+=all[Math.floor(Math.random()*all.length)];
+  return pw.split('').sort(()=>Math.random()-0.5).join('');
+}
+
+const levelColors={
+  'WEAK':{bar:'#ff004c',badge:'rgba(255,0,76,0.15)',badgeBorder:'rgba(255,0,76,0.4)',badgeText:'#ff4d79',segs:['#ff004c',null,null,null]},
+  'MEDIUM':{bar:'#ff8c00',badge:'rgba(255,140,0,0.15)',badgeBorder:'rgba(255,140,0,0.4)',badgeText:'#ffaa44',segs:['#ff004c','#ff8c00',null,null]},
+  'STRONG':{bar:'#00d26a',badge:'rgba(0,210,106,0.15)',badgeBorder:'rgba(0,210,106,0.4)',badgeText:'#00ff84',segs:['#ff004c','#ff8c00','#00d26a',null]},
+  'VERY STRONG':{bar:'#00eeff',badge:'rgba(0,238,255,0.15)',badgeBorder:'rgba(0,238,255,0.4)',badgeText:'#00eeff',segs:['#ff004c','#ff8c00','#00d26a','#00eeff']}
+};
+
+function renderAnalysis(pw){
+  if(!pw){
+    document.getElementById('barFill').style.width='0%';
+    document.getElementById('mScore').textContent='0';
+    document.getElementById('mEntropy').textContent='0';
+    document.getElementById('mCrack').textContent='∞';
+    document.getElementById('strengthBadge').textContent='STANDBY';
+    document.getElementById('strengthBadge').style.cssText='background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.1);font-family:var(--f);font-size:0.7rem;font-weight:700;letter-spacing:2px;padding:3px 12px;border-radius:20px;text-transform:uppercase;transition:all 0.5s';
+    [0,1,2,3,4,5,6,7].forEach(i=>document.getElementById('c'+i).className='check-item');
+    [0,1,2,3].forEach(i=>document.getElementById('s'+i).style.background='rgba(255,255,255,0.07)');
+    document.getElementById('sugBox').className='suggestions-box';
+    document.getElementById('termStatus').textContent='AWAITING INPUT';
+    return;
+  }
+  const r=analyzePassword(pw);
+  const col=levelColors[r.level];
+  document.getElementById('barFill').style.width=r.score+'%';
+  document.getElementById('barFill').style.background=col.bar;
+  document.getElementById('barFill').style.boxShadow=`0 0 10px ${col.bar}88`;
+  const badge=document.getElementById('strengthBadge');
+  badge.textContent=r.level;
+  badge.style.cssText=`background:${col.badge};color:${col.badgeText};border:1px solid ${col.badgeBorder};font-family:'Orbitron',monospace;font-size:0.7rem;font-weight:700;letter-spacing:2px;padding:3px 12px;border-radius:20px;text-transform:uppercase;transition:all 0.5s;text-shadow:0 0 10px ${col.badgeText}88`;
+  document.getElementById('mScore').textContent=r.score;
+  document.getElementById('mScore').style.color=col.bar;
+  document.getElementById('mEntropy').textContent=r.entropy;
+  document.getElementById('mCrack').textContent=r.crack;
+  const checkKeys=['length','upper','lower','number','symbol','noRepeat','notCommon','noSeq'];
+  checkKeys.forEach((k,i)=>{
+    document.getElementById('c'+i).className='check-item '+(r.checks[k]?'pass':'fail');
+  });
+  col.segs.forEach((s,i)=>{
+    document.getElementById('s'+i).style.background=s||'rgba(255,255,255,0.07)';
+    if(s)document.getElementById('s'+i).style.boxShadow=`0 0 6px ${s}88`;
+    else document.getElementById('s'+i).style.boxShadow='none';
+  });
+  const sugBox=document.getElementById('sugBox');
+  const sugList=document.getElementById('sugList');
+  if(r.suggestions.length>0){
+    sugBox.className='suggestions-box show';
+    sugList.innerHTML=r.suggestions.map(s=>`<div class="sug-item"><span class="sug-arrow">▶</span><span>${s}</span></div>`).join('');
+  }else{
+    sugBox.className='suggestions-box show';
+    sugList.innerHTML=`<div class="sug-item"><span class="sug-arrow" style="color:#00ff84">✓</span><span style="color:rgba(0,255,100,0.7)">Maximum threat resistance achieved. Password is cryptographically robust.</span></div>`;
+  }
+  const statuses={'WEAK':'HIGH THREAT DETECTED','MEDIUM':'MODERATE RISK','STRONG':'SECURE','VERY STRONG':'FORTRESS LEVEL'};
+  document.getElementById('termStatus').textContent=statuses[r.level];
+}
+
+const pwInput=document.getElementById('pwInput');
+const eyeBtn=document.getElementById('eyeBtn');
+const analyzeBtn=document.getElementById('analyzeBtn');
+
+pwInput.addEventListener('input',()=>renderAnalysis(pwInput.value));
+
+eyeBtn.addEventListener('click',()=>{
+  const isPass=pwInput.type==='password';
+  pwInput.type=isPass?'text':'password';
+  eyeBtn.innerHTML=isPass?'<i class="ti ti-eye-off"></i>':'<i class="ti ti-eye"></i>';
+});
+
+analyzeBtn.addEventListener('click',()=>{
+  analyzeBtn.textContent='🔍 SCANNING...';
+  setTimeout(()=>{
+    renderAnalysis(pwInput.value);
+    analyzeBtn.innerHTML='<i class="ti ti-scan" aria-hidden="true"></i> &nbsp; INITIATE DEEP SCAN';
+  },600);
+});
+
+document.getElementById('genBtn').addEventListener('click',()=>{
+  const pw=generatePassword();
+  document.getElementById('genPw').textContent=pw;
+  document.getElementById('genPw').style.color='rgba(255,0,76,0.8)';
+});
+
+document.getElementById('genBox').addEventListener('click',()=>{
+  const pw=document.getElementById('genPw').textContent;
+  if(pw!=='Click GENERATE to create a secure password'){
+    navigator.clipboard?.writeText(pw).catch(()=>{});
+    const t=document.getElementById('genPw');
+    const orig=t.textContent;
+    t.textContent='✓ COPIED TO CLIPBOARD';
+    t.style.color='rgba(0,255,100,0.8)';
+    setTimeout(()=>{t.textContent=orig;t.style.color='rgba(255,0,76,0.8)'},1500);
+  }
+});
+</script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600&family=Poppins:wght@300;400;600&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+.cyber-root{
+  background:#050505;
+  min-height:100vh;
+  font-family:'Poppins',sans-serif;
+  position:relative;
+  overflow:hidden;
+  padding:2rem 1rem;
+}
+
+canvas#bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+.glow-orb{
+  position:fixed;border-radius:50%;filter:blur(80px);z-index:0;pointer-events:none;
+}
+.orb1{width:400px;height:400px;background:rgba(255,0,76,0.12);top:-100px;left:-100px;animation:orbFloat1 8s ease-in-out infinite}
+.orb2{width:300px;height:300px;background:rgba(255,26,94,0.08);bottom:-50px;right:-50px;animation:orbFloat2 10s ease-in-out infinite}
+.orb3{width:200px;height:200px;background:rgba(255,77,121,0.06);top:50%;left:50%;animation:orbFloat3 12s ease-in-out infinite}
+
+@keyframes orbFloat1{0%,100%{transform:translate(0,0)}50%{transform:translate(40px,30px)}}
+@keyframes orbFloat2{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,-40px)}}
+@keyframes orbFloat3{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.3)}}
+
+.container{
+  position:relative;z-index:10;max-width:680px;margin:0 auto;
+}
+
+.header{text-align:center;margin-bottom:2rem}
+
+.shield-icon{
+  width:64px;height:64px;margin:0 auto 1rem;
+  background:rgba(255,0,76,0.1);
+  border:1.5px solid rgba(255,0,76,0.5);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  animation:shieldPulse 2s ease-in-out infinite;
+  font-size:28px;
+}
+@keyframes shieldPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,0,76,0.3),inset 0 0 20px rgba(255,0,76,0.1)}50%{box-shadow:0 0 0 15px rgba(255,0,76,0),inset 0 0 30px rgba(255,0,76,0.2)}}
+
+.title{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(1.1rem,4vw,1.6rem);
+  font-weight:900;
+  color:#ff004c;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  text-shadow:0 0 20px rgba(255,0,76,0.5);
+  animation:titleGlow 3s ease-in-out infinite;
+}
+@keyframes titleGlow{0%,100%{text-shadow:0 0 20px rgba(255,0,76,0.5)}50%{text-shadow:0 0 40px rgba(255,0,76,0.8),0 0 60px rgba(255,0,76,0.3)}}
+
+.subtitle{
+  font-family:'Rajdhani',sans-serif;
+  color:rgba(255,77,121,0.7);
+  font-size:0.85rem;
+  letter-spacing:5px;
+  text-transform:uppercase;
+  margin-top:0.4rem;
+}
+
+.main-card{
+  background:rgba(10,10,10,0.85);
+  border:1px solid rgba(255,0,76,0.25);
+  border-radius:16px;
+  padding:2rem;
+  backdrop-filter:blur(20px);
+  position:relative;
+  overflow:hidden;
+}
+
+.main-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,0,76,0.8),transparent);
+  animation:scanLine 3s linear infinite;
+}
+@keyframes scanLine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+.main-card::after{
+  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background:radial-gradient(ellipse at top center,rgba(255,0,76,0.05) 0%,transparent 60%);
+  pointer-events:none;
+}
+
+.section-label{
+  font-family:'Rajdhani',sans-serif;
+  font-size:0.7rem;
+  letter-spacing:4px;
+  color:rgba(255,0,76,0.6);
+  text-transform:uppercase;
+  margin-bottom:0.6rem;
+}
+
+.input-wrap{
+  position:relative;margin-bottom:1.5rem;
+}
+
+.pw-input{
+  width:100%;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,0,76,0.3);
+  border-radius:8px;
+  padding:0.85rem 3rem 0.85rem 1rem;
+  color:#fff;
+  font-family:'Rajdhani',sans-serif;
+  font-size:1.1rem;
+  letter-spacing:2px;
+  outline:none;
+  transition:border-color 0.3s,box-shadow 0.3s;
+}
+.pw-input:focus{
+  border-color:rgba(255,0,76,0.7);
+  box-shadow:0 0 0 3px rgba(255,0,76,0.1),inset 0 0 20px rgba(255,0,76,0.05);
+}
+.pw-input::placeholder{color:rgba(255,255,255,0.2);letter-spacing:1px}
+
+.eye-btn{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;
+  color:rgba(255,0,76,0.6);font-size:18px;
+  transition:color 0.2s;padding:4px;
+}
+.eye-btn:hover{color:#ff004c}
+
+.analyze-btn{
+  width:100%;
+  background:rgba(255,0,76,0.1);
+  border:1px solid rgba(255,0,76,0.6);
+  border-radius:8px;
+  color:#ff4d79;
+  font-family:'Orbitron',monospace;
+  font-size:0.85rem;
+  font-weight:700;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  padding:0.85rem;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  transition:all 0.3s;
+  margin-bottom:1.5rem;
+}
+.analyze-btn:hover{
+  background:rgba(255,0,76,0.2);
+  box-shadow:0 0 20px rgba(255,0,76,0.3);
+  transform:translateY(-1px);
+}
+.analyze-btn:active{transform:translateY(0) scale(0.99)}
+.analyze-btn::before{
+  content:'';position:absolute;top:-100%;left:-100%;width:300%;height:300%;
+  background:linear-gradient(135deg,transparent 40%,rgba(255,0,76,0.1) 50%,transparent 60%);
+  transition:top 0.4s,left 0.4s;
+}
+.analyze-btn:hover::before{top:0;left:0}
+
+.strength-section{margin-bottom:1.5rem}
+
+.strength-header{
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;
+}
+
+.strength-label{
+  font-family:'Rajdhani',sans-serif;
+  font-size:0.75rem;
+  letter-spacing:3px;
+  color:rgba(255,255,255,0.4);
+  text-transform:uppercase;
+}
+
+.strength-badge{
+  font-family:'Orbitron',monospace;
+  font-size:0.7rem;
+  font-weight:700;
+  letter-spacing:2px;
+  padding:3px 12px;
+  border-radius:20px;
+  text-transform:uppercase;
+  transition:all 0.5s;
+}
+
+.bar-track{
+  width:100%;height:6px;
+  background:rgba(255,255,255,0.05);
+  border-radius:3px;overflow:hidden;
+  margin-bottom:0.5rem;
+}
+.bar-fill{
+  height:100%;width:0%;border-radius:3px;
+  transition:width 0.8s cubic-bezier(0.4,0,0.2,1),background 0.5s;
+  position:relative;
+}
+.bar-fill::after{
+  content:'';position:absolute;top:0;right:0;bottom:0;width:30px;
+  background:rgba(255,255,255,0.3);filter:blur(4px);
+  animation:barShine 2s ease-in-out infinite;
+}
+@keyframes barShine{0%,100%{opacity:0}50%{opacity:1}}
+
+.bar-segments{display:flex;gap:3px;margin-bottom:1rem}
+.seg{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,0.07);transition:background 0.4s}
+
+.entropy-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-bottom:1.5rem;
+}
+
+.metric-box{
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:8px;padding:0.75rem;text-align:center;
+  transition:border-color 0.3s;
+}
+.metric-box:hover{border-color:rgba(255,0,76,0.3)}
+
+.metric-val{
+  font-family:'Orbitron',monospace;
+  font-size:1.3rem;font-weight:700;
+  color:#ff004c;
+  text-shadow:0 0 10px rgba(255,0,76,0.4);
+  display:block;
+}
+
+.metric-lbl{
+  font-family:'Rajdhani',sans-serif;
+  font-size:0.65rem;letter-spacing:2px;
+  color:rgba(255,255,255,0.3);
+  text-transform:uppercase;margin-top:2px;display:block;
+}
+
+.checks-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1.5rem;
+}
+
+.check-item{
+  display:flex;align-items:center;gap:8px;
+  padding:0.5rem 0.75rem;
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:6px;
+  transition:all 0.3s;
+}
+.check-item.pass{
+  border-color:rgba(0,255,100,0.2);
+  background:rgba(0,255,100,0.03);
+}
+.check-item.fail{
+  border-color:rgba(255,0,76,0.15);
+}
+
+.check-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:rgba(255,255,255,0.1);
+  transition:all 0.3s;flex-shrink:0;
+}
+.check-item.pass .check-dot{
+  background:#00ff64;
+  box-shadow:0 0 6px rgba(0,255,100,0.6);
+}
+.check-item.fail .check-dot{
+  background:rgba(255,0,76,0.4);
+}
+
+.check-text{
+  font-family:'Rajdhani',sans-serif;
+  font-size:0.8rem;color:rgba(255,255,255,0.4);
+  letter-spacing:1px;
+  transition:color 0.3s;
+}
+.check-item.pass .check-text{color:rgba(0,255,100,0.8)}
+
+.suggestions-box{
+  background:rgba(255,0,76,0.03);
+  border:1px solid rgba(255,0,76,0.15);
+  border-radius:8px;padding:1rem;
+  margin-bottom:1.5rem;
+  display:none;
+}
+.suggestions-box.show{display:block}
+
+.sug-title{
+  font-family:'Orbitron',monospace;
+  font-size:0.65rem;letter-spacing:3px;
+  color:rgba(255,0,76,0.7);
+  text-transform:uppercase;margin-bottom:0.75rem;
+}
+
+.sug-item{
+  display:flex;align-items:flex-start;gap:8px;
+  font-family:'Rajdhani',sans-serif;
+  font-size:0.85rem;color:rgba(255,255,255,0.5);
+  margin-bottom:0.4rem;line-height:1.4;
+}
+.sug-arrow{color:#ff004c;flex-shrink:0}
+
+.gen-section{margin-bottom:1rem}
+
+.gen-pw-box{
+  display:flex;gap:8px;align-items:center;
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px;padding:0.75rem 1rem;
+  cursor:pointer;transition:all 0.3s;
+}
+.gen-pw-box:hover{border-color:rgba(255,0,76,0.3)}
+
+.gen-pw-text{
+  font-family:'Rajdhani',sans-serif;
+  font-size:0.95rem;letter-spacing:2px;
+  color:rgba(255,255,255,0.5);flex:1;
+  word-break:break-all;
+}
+
+.gen-btn{
+  font-family:'Rajdhani',sans-serif;
+  font-size:0.7rem;letter-spacing:2px;
+  color:#ff004c;text-transform:uppercase;
+  background:none;border:none;cursor:pointer;
+  white-space:nowrap;
+}
+
+.terminal-line{
+  font-family:'Rajdhani',monospace;
+  font-size:0.75rem;letter-spacing:1px;
+  color:rgba(255,0,76,0.4);
+  text-align:right;margin-top:1rem;
+  animation:termBlink 1.5s step-end infinite;
+}
+.terminal-line span{color:rgba(255,0,76,0.7)}
+@keyframes termBlink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+.score-ring{
+  width:80px;height:80px;margin:0 auto 1rem;
+  position:relative;
+}
+.score-ring svg{transform:rotate(-90deg)}
+.score-num{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:700;
+  color:#ff004c;text-shadow:0 0 10px rgba(255,0,76,0.5);
+}
+</style>
+
+<canvas id="bg"></canvas>
+<div class="glow-orb orb1"></div>
+<div class="glow-orb orb2"></div>
+<div class="glow-orb orb3"></div>
+
+<div class="cyber-root">
+<div class="container">
+
+  <div class="header">
+    <div class="shield-icon" aria-hidden="true">🛡</div>
+    <div class="title">CyberGuard Pro</div>
+    <div class="subtitle">Password Threat Analyzer</div>
+  </div>
+
+  <div class="main-card">
+    <div class="section-label">// ENTER CREDENTIALS FOR ANALYSIS</div>
+
+    <div class="input-wrap">
+      <input class="pw-input" type="password" id="pwInput" placeholder="Type your password..." autocomplete="off" />
+      <button class="eye-btn" id="eyeBtn" aria-label="Toggle visibility">
+        <i class="ti ti-eye"></i>
+      </button>
+    </div>
+
+    <button class="analyze-btn" id="analyzeBtn">
+      <i class="ti ti-scan" aria-hidden="true"></i> &nbsp; INITIATE DEEP SCAN
+    </button>
+
+    <div class="strength-section">
+      <div class="strength-header">
+        <span class="strength-label">// THREAT LEVEL</span>
+        <span class="strength-badge" id="strengthBadge" style="background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.1)">STANDBY</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" id="barFill"></div></div>
+      <div class="bar-segments" id="segs">
+        <div class="seg" id="s0"></div>
+        <div class="seg" id="s1"></div>
+        <div class="seg" id="s2"></div>
+        <div class="seg" id="s3"></div>
+      </div>
+    </div>
+
+    <div class="entropy-row">
+      <div class="metric-box">
+        <span class="metric-val" id="mScore">0</span>
+        <span class="metric-lbl">Security Score</span>
+      </div>
+      <div class="metric-box">
+        <span class="metric-val" id="mEntropy">0</span>
+        <span class="metric-lbl">Entropy (bits)</span>
+      </div>
+      <div class="metric-box">
+        <span class="metric-val" id="mCrack">∞</span>
+        <span class="metric-lbl">Crack Time</span>
+      </div>
+    </div>
+
+    <div class="section-label">// SECURITY CHECKS</div>
+    <div class="checks-grid">
+      <div class="check-item" id="c0"><div class="check-dot"></div><span class="check-text">12+ Characters</span></div>
+      <div class="check-item" id="c1"><div class="check-dot"></div><span class="check-text">Uppercase</span></div>
+      <div class="check-item" id="c2"><div class="check-dot"></div><span class="check-text">Lowercase</span></div>
+      <div class="check-item" id="c3"><div class="check-dot"></div><span class="check-text">Numbers</span></div>
+      <div class="check-item" id="c4"><div class="check-dot"></div><span class="check-text">Symbols</span></div>
+      <div class="check-item" id="c5"><div class="check-dot"></div><span class="check-text">No Repeats</span></div>
+      <div class="check-item" id="c6"><div class="check-dot"></div><span class="check-text">Not Common</span></div>
+      <div class="check-item" id="c7"><div class="check-dot"></div><span class="check-text">No Sequences</span></div>
+    </div>
+
+    <div class="suggestions-box" id="sugBox">
+      <div class="sug-title">⚡ THREAT INTELLIGENCE REPORT</div>
+      <div id="sugList"></div>
+    </div>
+
+    <div class="section-label">// SUGGESTED SECURE PASSWORD</div>
+    <div class="gen-section">
+      <div class="gen-pw-box" id="genBox">
+        <span class="gen-pw-text" id="genPw">Click GENERATE to create a secure password</span>
+        <button class="gen-btn" id="genBtn">
+          <i class="ti ti-refresh" aria-hidden="true"></i> GENERATE
+        </button>
+      </div>
+    </div>
+
+    <div class="terminal-line">SYSTEM STATUS: <span id="termStatus">AWAITING INPUT</span> ▮</div>
+  </div>
+
+</div>
+</div>
+
+<script>
+const WEAK_PASSWORDS = ['password','123456','qwerty','abc123','password1','letmein','welcome','monkey','dragon','master','sunshine','princess','shadow','football','iloveyou','admin','login','test','pass','1234','111111','654321','pass123','user','guest'];
+
+const canvas = document.getElementById('bg');
+const ctx = canvas.getContext('2d');
+let particles = [];
+let gridLines = [];
+
+function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;initGrid()}
+
+function initGrid(){
+  gridLines = [];
+  for(let x=0;x<canvas.width;x+=60)gridLines.push({x,y:0,type:'v'});
+  for(let y=0;y<canvas.height;y+=60)gridLines.push({x:0,y,type:'h'});
+}
+
+function initParticles(){
+  particles=[];
+  for(let i=0;i<50;i++){
+    particles.push({
+      x:Math.random()*window.innerWidth,
+      y:Math.random()*window.innerHeight,
+      vx:(Math.random()-0.5)*0.4,
+      vy:(Math.random()-0.5)*0.4,
+      r:Math.random()*2+0.5,
+      a:Math.random()*0.5+0.1,
+      pulse:Math.random()*Math.PI*2
+    });
+  }
+}
+
+function drawBg(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.strokeStyle='rgba(255,0,76,0.04)';
+  ctx.lineWidth=0.5;
+  gridLines.forEach(l=>{
+    ctx.beginPath();
+    if(l.type==='v'){ctx.moveTo(l.x,0);ctx.lineTo(l.x,canvas.height);}
+    else{ctx.moveTo(0,l.y);ctx.lineTo(canvas.width,l.y);}
+    ctx.stroke();
+  });
+
+  particles.forEach(p=>{
+    p.pulse+=0.02;
+    const a=p.a*(0.5+0.5*Math.sin(p.pulse));
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,0,76,${a})`;
+    ctx.fill();
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0||p.x>canvas.width)p.vx*=-1;
+    if(p.y<0||p.y>canvas.height)p.vy*=-1;
+  });
+
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x;
+      const dy=particles[i].y-particles[j].y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<120){
+        ctx.strokeStyle=`rgba(255,0,76,${0.06*(1-dist/120)})`;
+        ctx.lineWidth=0.5;
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x,particles[i].y);
+        ctx.lineTo(particles[j].x,particles[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(drawBg);
+}
+
+resize();initParticles();drawBg();
+window.addEventListener('resize',resize);
+
+function calcEntropy(pw){
+  let pool=0;
+  if(/[a-z]/.test(pw))pool+=26;
+  if(/[A-Z]/.test(pw))pool+=26;
+  if(/[0-9]/.test(pw))pool+=10;
+  if(/[^a-zA-Z0-9]/.test(pw))pool+=32;
+  return pool>0?(pw.length*Math.log2(pool)).toFixed(1):0;
+}
+
+function crackTime(entropy){
+  const e=parseFloat(entropy);
+  if(e<=0)return '< 1ms';
+  const attempts=Math.pow(2,e);
+  const speed=1e11;
+  const secs=attempts/speed;
+  if(secs<0.001)return '< 1ms';
+  if(secs<60)return secs.toFixed(1)+'s';
+  if(secs<3600)return (secs/60).toFixed(1)+'min';
+  if(secs<86400)return (secs/3600).toFixed(1)+'hr';
+  if(secs<31536000)return (secs/86400).toFixed(0)+'days';
+  if(secs<3153600000)return (secs/31536000).toFixed(0)+'yrs';
+  return secs>3.15e16?'∞ (Universe+)':'Centuries';
+}
+
+function analyzePassword(pw){
+  const checks={
+    length: pw.length>=12,
+    upper: /[A-Z]/.test(pw),
+    lower: /[a-z]/.test(pw),
+    number: /[0-9]/.test(pw),
+    symbol: /[^a-zA-Z0-9]/.test(pw),
+    noRepeat: !/(.)\1{2,}/.test(pw),
+    notCommon: !WEAK_PASSWORDS.includes(pw.toLowerCase()),
+    noSeq: !/(?:abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|qrs|rst|stu|tuv|uvw|vwx|wxy|xyz|012|123|234|345|456|567|678|789|890)/i.test(pw)
+  };
+
+  let score=0;
+  if(pw.length>=8)score+=10;
+  if(pw.length>=12)score+=15;
+  if(pw.length>=16)score+=10;
+  if(checks.upper)score+=15;
+  if(checks.lower)score+=10;
+  if(checks.number)score+=15;
+  if(checks.symbol)score+=20;
+  if(checks.noRepeat)score+=5;
+  if(checks.notCommon)score+=15;
+  if(checks.noSeq)score+=5;
+  score=Math.min(100,score);
+
+  let level='WEAK';
+  if(score>=75)level='VERY STRONG';
+  else if(score>=55)level='STRONG';
+  else if(score>=30)level='MEDIUM';
+
+  const suggestions=[];
+  if(pw.length<12)suggestions.push('Extend to at least 12 characters for better entropy');
+  if(!checks.upper)suggestions.push('Add uppercase letters (A-Z) to expand character space');
+  if(!checks.lower)suggestions.push('Include lowercase letters (a-z) for complexity');
+  if(!checks.number)suggestions.push('Mix in numeric digits (0-9)');
+  if(!checks.symbol)suggestions.push('Use special characters (!@#$%^&*) for maximum strength');
+  if(!checks.noRepeat)suggestions.push('Avoid repeated character sequences (aaa, 111)');
+  if(!checks.notCommon)suggestions.push('⚠ CRITICAL: This is a known compromised password');
+  if(!checks.noSeq)suggestions.push('Remove sequential patterns (abc, 123, xyz)');
+
+  return {checks,score,level,suggestions,entropy:calcEntropy(pw),crack:crackTime(calcEntropy(pw))};
+}
+
+function generatePassword(){
+  const upper='ABCDEFGHJKLMNPQRSTUVWXYZ';
+  const lower='abcdefghjkmnpqrstuvwxyz';
+  const nums='23456789';
+  const syms='!@#$%^&*_+-=';
+  let pw='';
+  pw+=upper[Math.floor(Math.random()*upper.length)];
+  pw+=upper[Math.floor(Math.random()*upper.length)];
+  pw+=lower[Math.floor(Math.random()*lower.length)];
+  pw+=lower[Math.floor(Math.random()*lower.length)];
+  pw+=nums[Math.floor(Math.random()*nums.length)];
+  pw+=nums[Math.floor(Math.random()*nums.length)];
+  pw+=syms[Math.floor(Math.random()*syms.length)];
+  pw+=syms[Math.floor(Math.random()*syms.length)];
+  const all=upper+lower+nums+syms;
+  for(let i=0;i<8;i++)pw+=all[Math.floor(Math.random()*all.length)];
+  return pw.split('').sort(()=>Math.random()-0.5).join('');
+}
+
+const levelColors={
+  'WEAK':{bar:'#ff004c',badge:'rgba(255,0,76,0.15)',badgeBorder:'rgba(255,0,76,0.4)',badgeText:'#ff4d79',segs:['#ff004c',null,null,null]},
+  'MEDIUM':{bar:'#ff8c00',badge:'rgba(255,140,0,0.15)',badgeBorder:'rgba(255,140,0,0.4)',badgeText:'#ffaa44',segs:['#ff004c','#ff8c00',null,null]},
+  'STRONG':{bar:'#00d26a',badge:'rgba(0,210,106,0.15)',badgeBorder:'rgba(0,210,106,0.4)',badgeText:'#00ff84',segs:['#ff004c','#ff8c00','#00d26a',null]},
+  'VERY STRONG':{bar:'#00eeff',badge:'rgba(0,238,255,0.15)',badgeBorder:'rgba(0,238,255,0.4)',badgeText:'#00eeff',segs:['#ff004c','#ff8c00','#00d26a','#00eeff']}
+};
+
+function renderAnalysis(pw){
+  if(!pw){
+    document.getElementById('barFill').style.width='0%';
+    document.getElementById('mScore').textContent='0';
+    document.getElementById('mEntropy').textContent='0';
+    document.getElementById('mCrack').textContent='∞';
+    document.getElementById('strengthBadge').textContent='STANDBY';
+    document.getElementById('strengthBadge').style.cssText='background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.1);font-family:var(--f);font-size:0.7rem;font-weight:700;letter-spacing:2px;padding:3px 12px;border-radius:20px;text-transform:uppercase;transition:all 0.5s';
+    [0,1,2,3,4,5,6,7].forEach(i=>document.getElementById('c'+i).className='check-item');
+    [0,1,2,3].forEach(i=>document.getElementById('s'+i).style.background='rgba(255,255,255,0.07)');
+    document.getElementById('sugBox').className='suggestions-box';
+    document.getElementById('termStatus').textContent='AWAITING INPUT';
+    return;
+  }
+  const r=analyzePassword(pw);
+  const col=levelColors[r.level];
+  document.getElementById('barFill').style.width=r.score+'%';
+  document.getElementById('barFill').style.background=col.bar;
+  document.getElementById('barFill').style.boxShadow=`0 0 10px ${col.bar}88`;
+  const badge=document.getElementById('strengthBadge');
+  badge.textContent=r.level;
+  badge.style.cssText=`background:${col.badge};color:${col.badgeText};border:1px solid ${col.badgeBorder};font-family:'Orbitron',monospace;font-size:0.7rem;font-weight:700;letter-spacing:2px;padding:3px 12px;border-radius:20px;text-transform:uppercase;transition:all 0.5s;text-shadow:0 0 10px ${col.badgeText}88`;
+  document.getElementById('mScore').textContent=r.score;
+  document.getElementById('mScore').style.color=col.bar;
+  document.getElementById('mEntropy').textContent=r.entropy;
+  document.getElementById('mCrack').textContent=r.crack;
+  const checkKeys=['length','upper','lower','number','symbol','noRepeat','notCommon','noSeq'];
+  checkKeys.forEach((k,i)=>{
+    document.getElementById('c'+i).className='check-item '+(r.checks[k]?'pass':'fail');
+  });
+  col.segs.forEach((s,i)=>{
+    document.getElementById('s'+i).style.background=s||'rgba(255,255,255,0.07)';
+    if(s)document.getElementById('s'+i).style.boxShadow=`0 0 6px ${s}88`;
+    else document.getElementById('s'+i).style.boxShadow='none';
+  });
+  const sugBox=document.getElementById('sugBox');
+  const sugList=document.getElementById('sugList');
+  if(r.suggestions.length>0){
+    sugBox.className='suggestions-box show';
+    sugList.innerHTML=r.suggestions.map(s=>`<div class="sug-item"><span class="sug-arrow">▶</span><span>${s}</span></div>`).join('');
+  }else{
+    sugBox.className='suggestions-box show';
+    sugList.innerHTML=`<div class="sug-item"><span class="sug-arrow" style="color:#00ff84">✓</span><span style="color:rgba(0,255,100,0.7)">Maximum threat resistance achieved. Password is cryptographically robust.</span></div>`;
+  }
+  const statuses={'WEAK':'HIGH THREAT DETECTED','MEDIUM':'MODERATE RISK','STRONG':'SECURE','VERY STRONG':'FORTRESS LEVEL'};
+  document.getElementById('termStatus').textContent=statuses[r.level];
+}
+
+const pwInput=document.getElementById('pwInput');
+const eyeBtn=document.getElementById('eyeBtn');
+const analyzeBtn=document.getElementById('analyzeBtn');
+
+pwInput.addEventListener('input',()=>renderAnalysis(pwInput.value));
+
+eyeBtn.addEventListener('click',()=>{
+  const isPass=pwInput.type==='password';
+  pwInput.type=isPass?'text':'password';
+  eyeBtn.innerHTML=isPass?'<i class="ti ti-eye-off"></i>':'<i class="ti ti-eye"></i>';
+});
+
+analyzeBtn.addEventListener('click',()=>{
+  analyzeBtn.textContent='🔍 SCANNING...';
+  setTimeout(()=>{
+    renderAnalysis(pwInput.value);
+    analyzeBtn.innerHTML='<i class="ti ti-scan" aria-hidden="true"></i> &nbsp; INITIATE DEEP SCAN';
+  },600);
+});
+
+document.getElementById('genBtn').addEventListener('click',()=>{
+  const pw=generatePassword();
+  document.getElementById('genPw').textContent=pw;
+  document.getElementById('genPw').style.color='rgba(255,0,76,0.8)';
+});
+
+document.getElementById('genBox').addEventListener('click',()=>{
+  const pw=document.getElementById('genPw').textContent;
+  if(pw!=='Click GENERATE to create a secure password'){
+    navigator.clipboard?.writeText(pw).catch(()=>{});
+    const t=document.getElementById('genPw');
+    const orig=t.textContent;
+    t.textContent='✓ COPIED TO CLIPBOARD';
+    t.style.color='rgba(0,255,100,0.8)';
+    setTimeout(()=>{t.textContent=orig;t.style.color='rgba(255,0,76,0.8)'},1500);
+  }
+});
+</script>
